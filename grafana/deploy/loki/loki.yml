@@ -5,6 +5,11 @@ server:
   http_listen_port: 3100
   grpc_listen_port: 9096
   log_level: warn
+  # Query results travel between the internal query frontend and querier over
+  # gRPC (4 MB by default). Odoo lines with tracebacks or stack_info are several
+  # KB each, so a logs panel of 2000 lines easily exceeds it and never loads.
+  grpc_server_max_recv_msg_size: 67108864
+  grpc_server_max_send_msg_size: 67108864
 
 common:
   instance_addr: 127.0.0.1

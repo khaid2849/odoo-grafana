@@ -467,7 +467,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"odoo\", db=~\"$db\", level=~\"ERROR|CRITICAL|WARNING\"} |~ \"(?i)$search\" | json | line_format \"{{if .message}}{{.logger}} [uid {{.uid}}] {{.message}}{{if .exception}}\\n{{.exception}}{{end}}{{else}}{{__line__}}{{end}}\"",
+          "expr": "{job=\"odoo\", db=~\"$db\", level=~\"ERROR|CRITICAL|WARNING\"} |~ \"(?i)$search\" | json | line_format \"{{if .message}}{{.logger}}{{if .uid}} [uid {{.uid}}]{{end}} {{.message}}{{if .exception}}\\n{{.exception}}{{end}}{{else}}{{__line__}}{{end}}\"",
           "legendFormat": "",
           "queryType": "range",
           "refId": "A"
@@ -537,7 +537,7 @@
             "type": "loki",
             "uid": "loki"
           },
-          "expr": "{job=\"odoo\", db=~\"$db\", level=~\"$level\"} |~ \"(?i)$search\" | json | line_format \"{{if .message}}{{.logger}} [uid {{.uid}}] {{.message}}{{if .exception}}\\n{{.exception}}{{end}}{{else}}{{__line__}}{{end}}\"",
+          "expr": "{job=\"odoo\", db=~\"$db\", level=~\"$level\"} |~ \"(?i)$search\" | json | line_format \"{{if .message}}{{.logger}}{{if .uid}} [uid {{.uid}}]{{end}} {{.message}}{{if .exception}}\\n{{.exception}}{{end}}{{else}}{{__line__}}{{end}}\"",
           "legendFormat": "",
           "queryType": "range",
           "refId": "A"

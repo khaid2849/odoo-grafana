@@ -261,7 +261,7 @@ def logs_dashboard():
 
     # Plain-text lines (written before grafana_log_json was enabled) do not parse as
     # JSON and are shown unchanged.
-    fmt = ('| json | line_format "{{if .message}}{{.logger}} [uid {{.uid}}] {{.message}}'
+    fmt = ('| json | line_format "{{if .message}}{{.logger}}{{if .uid}} [uid {{.uid}}]{{end}} {{.message}}'
            '{{if .exception}}\\n{{.exception}}{{end}}{{else}}{{__line__}}{{end}}"')
     L.add(logs('Errors and warnings', loki(
         f'{{job="odoo", db=~"$db", level=~"ERROR|CRITICAL|WARNING"}} |~ "(?i)$search" {fmt}')), 24, 12)
