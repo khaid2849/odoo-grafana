@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
                 <app data-string="Grafana" string="Grafana" name="grafana"
-                     groups="grafana.group_grafana_manager">
+                     groups="grafana.group_grafana_manager" logo="/grafana/static/description/icon.png">
                     <block title="Grafana" name="grafana_setting_container">
                         <setting id="grafana_url_setting" string="Grafana URL"
                                  help="Base URL used to embed dashboards. Prefer a same-origin path such as /grafana.">

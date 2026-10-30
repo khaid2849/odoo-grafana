@@ -26,9 +26,8 @@ A ready-to-run Docker stack (Prometheus, Loki, Alloy, Grafana,
 postgres-exporter) and the provisioned dashboards ship in the ``deploy``
 folder of the module, see ``deploy/README.md``.
     """,
-    'author': 'Khaid',
-    'maintainer': 'Khaid',
-    'website': 'https://github.com/khaid2849/odoo-grafana',
+    'author': 'Gout',
+    'maintainer': 'Gout',
     'license': 'LGPL-3',
     'depends': ['base_setup', 'web'],
     'external_dependencies': {
@@ -50,6 +49,7 @@ folder of the module, see ``deploy/README.md``.
         ],
     },
     'images': ['static/description/banner.png'],
+    'icon': '/grafana/static/description/icon.png',
     'post_load': 'post_load',
     'installable': True,
     'application': True,
