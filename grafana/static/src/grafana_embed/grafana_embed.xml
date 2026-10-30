@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="grafana.GrafanaEmbed">
+        <div class="o_grafana_embed d-flex flex-column h-100">
+            <div class="o_grafana_embed_bar d-flex align-items-center gap-2 px-3 py-2 border-bottom">
+                <ul class="nav nav-pills flex-nowrap overflow-auto">
+                    <li class="nav-item" t-foreach="state.dashboards" t-as="dashboard" t-key="dashboard.id">
+                        <a href="#" class="nav-link text-nowrap"
+                           t-att-class="{ active: dashboard.id === state.activeId }"
+                           t-att-title="dashboard.description"
+                           t-on-click.prevent="() => this.selectDashboard(dashboard.id)">
+                            <t t-esc="dashboard.name"/>
+                        </a>
+                    </li>
+                </ul>
+                <a t-if="activeDashboard" class="btn btn-link ms-auto text-nowrap"
+                   t-att-href="activeDashboard.url" target="_blank" rel="noopener">
+                    <i class="fa fa-external-link me-1"/>Open in Grafana
+                </a>
+            </div>
+            <div class="flex-grow-1 position-relative">
+                <iframe t-if="activeDashboard" t-att-src="iframeUrl" t-key="state.activeId"
+                        class="o_grafana_embed_frame position-absolute w-100 h-100 border-0"
+                        t-att-title="activeDashboard.name"/>
+                <div t-elif="!state.loading" class="o_view_nocontent">
+                    <div class="o_nocontent_help">
+                        <p class="o_view_nocontent_empty_folder">No dashboard configured</p>
+                        <p>Add dashboards in Grafana &gt; Configuration &gt; Dashboards.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</templates>

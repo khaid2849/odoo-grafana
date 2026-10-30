@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="module_category_grafana" model="ir.module.category">
+        <field name="name">Grafana</field>
+        <field name="sequence">90</field>
+    </record>
+
+    <record id="group_grafana_user" model="res.groups">
+        <field name="name">Viewer</field>
+        <field name="category_id" ref="module_category_grafana"/>
+        <field name="comment">Can open the embedded Grafana dashboards.</field>
+    </record>
+
+    <record id="group_grafana_manager" model="res.groups">
+        <field name="name">Administrator</field>
+        <field name="category_id" ref="module_category_grafana"/>
+        <field name="implied_ids" eval="[Command.link(ref('group_grafana_user'))]"/>
+        <field name="comment">Can read the slow request/query logs and manage dashboards.</field>
+    </record>
+
+    <record id="base.group_system" model="res.groups">
+        <field name="implied_ids" eval="[Command.link(ref('group_grafana_manager'))]"/>
+    </record>
+</odoo>

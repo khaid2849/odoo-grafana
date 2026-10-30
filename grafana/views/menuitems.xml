@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <menuitem id="menu_grafana_root" name="Grafana" sequence="95"
+              web_icon="grafana,static/description/icon.png"
+              groups="group_grafana_user"/>
+
+    <menuitem id="menu_grafana_dashboards" name="Dashboards" parent="menu_grafana_root"
+              action="grafana_embed_action" sequence="10"/>
+
+    <menuitem id="menu_grafana_performance" name="Performance" parent="menu_grafana_root"
+              sequence="20" groups="group_grafana_manager"/>
+    <menuitem id="menu_grafana_slow_requests" name="Slow Requests" parent="menu_grafana_performance"
+              action="grafana_slow_request_action" sequence="10"/>
+    <menuitem id="menu_grafana_slow_queries" name="Slow Queries" parent="menu_grafana_performance"
+              action="grafana_slow_query_action" sequence="20"/>
+
+    <menuitem id="menu_grafana_config" name="Configuration" parent="menu_grafana_root"
+              sequence="90" groups="group_grafana_manager"/>
+    <menuitem id="menu_grafana_settings" name="Settings" parent="menu_grafana_config"
+              action="grafana_settings_action" sequence="10" groups="base.group_system"/>
+    <menuitem id="menu_grafana_dashboard_config" name="Dashboards" parent="menu_grafana_config"
+              action="grafana_dashboard_action" sequence="20"/>
+</odoo>

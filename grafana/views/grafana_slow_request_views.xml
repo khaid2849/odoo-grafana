@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="grafana_slow_request_view_list" model="ir.ui.view">
+        <field name="name">grafana.slow.request.list</field>
+        <field name="model">grafana.slow.request</field>
+        <field name="arch" type="xml">
+            <list string="Slow Requests" create="false" edit="false" default_order="request_date desc">
+                <field name="request_date"/>
+                <field name="http_method" optional="hide"/>
+                <field name="path"/>
+                <field name="rpc_model" optional="show"/>
+                <field name="rpc_method" optional="show"/>
+                <field name="user_id" optional="show" widget="many2one_avatar_user"/>
+                <field name="status_code" optional="hide"/>
+                <field name="duration_ms" decoration-danger="duration_ms &gt;= 10000" decoration-warning="duration_ms &lt; 10000"/>
+                <field name="query_count" decoration-danger="query_count &gt;= 1000"/>
+                <field name="query_time_ms"/>
+                <field name="python_time_ms"/>
+                <field name="slow_query_count" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="grafana_slow_request_view_form" model="ir.ui.view">
+        <field name="name">grafana.slow.request.form</field>
+        <field name="model">grafana.slow.request</field>
+        <field name="arch" type="xml">
+            <form string="Slow Request" create="false" edit="false">
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="path"/></h1>
+                    </div>
+                    <group>
+                        <group string="Request">
+                            <field name="request_date"/>
+                            <field name="http_method"/>
+                            <field name="route"/>
+                            <field name="status_code"/>
+                            <field name="user_id"/>
+                        </group>
+                        <group string="RPC">
+                            <field name="rpc_model"/>
+                            <field name="rpc_method"/>
+                        </group>
+                        <group string="Timing">
+                            <field name="duration_ms"/>
+                            <field name="query_time_ms"/>
+                            <field name="python_time_ms"/>
+                        </group>
+                        <group string="SQL">
+                            <field name="query_count"/>
+                            <field name="slow_query_count"/>
+                        </group>
+                    </group>
+                    <notebook>
+                        <page string="Slow Queries" name="slow_queries">
+                            <field name="slow_query_ids">
+                                <list>
+                                    <field name="duration_ms"/>
+                                    <field name="query_hash"/>
+                                    <field name="query"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="duration_ms"/>
+                                        <field name="query_hash"/>
+                                    </group>
+                                    <field name="query" widget="code" options="{'mode': 'sql'}"/>
+                                </form>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="grafana_slow_request_view_search" model="ir.ui.view">
+        <field name="name">grafana.slow.request.search</field>
+        <field name="model">grafana.slow.request</field>
+        <field name="arch" type="xml">
+            <search string="Slow Requests">
+                <field name="path"/>
+                <field name="rpc_model"/>
+                <field name="rpc_method"/>
+                <field name="user_id"/>
+                <filter name="last_24h" string="Last 24 Hours"
+                        domain="[('request_date', '&gt;=', (context_today() - relativedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <filter name="very_slow" string="Over 10 s" domain="[('duration_ms', '&gt;=', 10000)]"/>
+                <filter name="with_slow_queries" string="With Slow Queries" domain="[('slow_query_count', '&gt;', 0)]"/>
+                <separator/>
+                <filter name="group_route" string="Route" context="{'group_by': 'route'}"/>
+                <filter name="group_model" string="Model" context="{'group_by': 'rpc_model'}"/>
+                <filter name="group_user" string="User" context="{'group_by': 'user_id'}"/>
+                <filter name="group_day" string="Day" context="{'group_by': 'request_date:day'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="grafana_slow_request_view_graph" model="ir.ui.view">
+        <field name="name">grafana.slow.request.graph</field>
+        <field name="model">grafana.slow.request</field>
+        <field name="arch" type="xml">
+            <graph string="Slow Requests" type="bar">
+                <field name="rpc_model"/>
+                <field name="duration_ms" type="measure"/>
+            </graph>
+        </field>
+    </record>
+
+    <record id="grafana_slow_request_view_pivot" model="ir.ui.view">
+        <field name="name">grafana.slow.request.pivot</field>
+        <field name="model">grafana.slow.request</field>
+        <field name="arch" type="xml">
+            <pivot string="Slow Requests">
+                <field name="rpc_model" type="row"/>
+                <field name="request_date" interval="day" type="col"/>
+                <field name="duration_ms" type="measure"/>
+            </pivot>
+        </field>
+    </record>
+
+    <record id="grafana_slow_request_action" model="ir.actions.act_window">
+        <field name="name">Slow Requests</field>
+        <field name="res_model">grafana.slow.request</field>
+        <field name="view_mode">list,form,graph,pivot</field>
+        <field name="context">{'search_default_last_24h': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No slow request logged</p>
+            <p>Requests slower than the threshold set in Settings &gt; Grafana are recorded here, with the SQL queries that exceeded the slow-query threshold.</p>
+        </field>
+    </record>
+</odoo>

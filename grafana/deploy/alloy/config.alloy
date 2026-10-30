@@ -1,0 +1,63 @@
+// Ships /var/log/odoo/*.log (the odoo-logs volume, mounted read-only) to Loki.
+// Lines are JSON when grafana_log_json = True; the few plain-text lines Odoo
+// writes before the module is loaded are parsed with a regex instead.
+
+local.file_match "odoo" {
+  path_targets = [{"__path__" = "/var/log/odoo/*.log", "job" = "odoo", "service_name" = "odoo"}]
+  sync_period  = "10s"
+}
+
+loki.source.file "odoo" {
+  targets    = local.file_match.odoo.targets
+  forward_to = [loki.process.odoo.receiver]
+  // On the very first run start at the end of the file instead of replaying
+  // its whole history; afterwards the saved read position is used.
+  tail_from_end = true
+}
+
+loki.process "odoo" {
+  // keep plain-text tracebacks attached to the line that logged them
+  stage.multiline {
+    firstline     = `^(\{|\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3} )`
+    max_wait_time = "3s"
+  }
+
+  stage.json {
+    expressions = {level = "", db = "", logger = "", ts = ""}
+  }
+
+  stage.regex {
+    expression = `^(?P<text_ts>\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}) \d+ (?P<level>[A-Z]+) (?P<db>\S+) (?P<logger>[^:\s]+):`
+  }
+
+  // JSON lines carry an RFC3339 "ts"; plain-text lines start with Odoo's UTC time
+  stage.timestamp {
+    source            = "ts"
+    format            = "RFC3339"
+    action_on_failure = "skip"
+  }
+
+  stage.timestamp {
+    source            = "text_ts"
+    format            = "2006-01-02 15:04:05,000"
+    location          = "UTC"
+    action_on_failure = "skip"
+  }
+
+  // low-cardinality labels only; the logger goes to structured metadata
+  stage.labels {
+    values = {level = "", db = ""}
+  }
+
+  stage.structured_metadata {
+    values = {logger = ""}
+  }
+
+  forward_to = [loki.write.default.receiver]
+}
+
+loki.write "default" {
+  endpoint {
+    url = "http://loki:3100/loki/api/v1/push"
+  }
+}

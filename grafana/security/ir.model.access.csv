@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_grafana_dashboard_user,grafana.dashboard.user,model_grafana_dashboard,group_grafana_user,1,0,0,0
+access_grafana_dashboard_manager,grafana.dashboard.manager,model_grafana_dashboard,group_grafana_manager,1,1,1,1
+access_grafana_slow_request_manager,grafana.slow.request.manager,model_grafana_slow_request,group_grafana_manager,1,0,0,1
+access_grafana_slow_query_manager,grafana.slow.query.manager,model_grafana_slow_query,group_grafana_manager,1,0,0,1

@@ -1,0 +1,114 @@
+# Grafana monitoring stack for Odoo (Prometheus + Loki/Alloy + Grafana).
+# Layered on top of the docker-compose.yml that runs Odoo (services `odoo`
+# and `db`), with this folder copied as ./monitoring next to it:
+#
+#   docker compose -f docker-compose.yml -f docker-compose.monitoring.yml up -d
+#
+# (or set COMPOSE_FILE=docker-compose.yml:docker-compose.monitoring.yml in .env)
+# Setup steps: see monitoring/README.md.
+
+services:
+  db:
+    # pg_stat_statements must be preloaded for the "Top queries" panels.
+    command:
+      - postgres
+      - -c
+      - shared_preload_libraries=pg_stat_statements
+      - -c
+      - pg_stat_statements.track=top
+      - -c
+      - track_io_timing=on
+
+  odoo:
+    environment:
+      # Workers share metrics through mmap files; tmpfs is wiped on restart.
+      PROMETHEUS_MULTIPROC_DIR: /var/run/odoo-metrics
+      ODOO_METRICS_TOKEN: ${ODOO_METRICS_TOKEN:-}
+    tmpfs:
+      - /var/run/odoo-metrics:mode=1777,size=64m
+    volumes:
+      # Odoo must log to a file here (logfile = /var/log/odoo/odoo.log), Alloy tails it
+      - odoo-logs:/var/log/odoo
+
+  prometheus:
+    image: prom/prometheus:v3.9.0
+    restart: unless-stopped
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --storage.tsdb.path=/prometheus
+      - --storage.tsdb.retention.time=30d
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus-data:/prometheus
+    ports:
+      # Prometheus UI for debugging, host-only.
+      - "127.0.0.1:9090:9090"
+
+  loki:
+    image: grafana/loki:3.7.8
+    restart: unless-stopped
+    command: -config.file=/etc/loki/loki.yml
+    volumes:
+      - ./monitoring/loki/loki.yml:/etc/loki/loki.yml:ro
+      - loki-data:/loki
+
+  alloy:
+    image: grafana/alloy:v1.21.3
+    restart: unless-stopped
+    depends_on:
+      - loki
+    command:
+      - run
+      - --storage.path=/var/lib/alloy/data
+      - /etc/alloy/config.alloy
+    volumes:
+      - ./monitoring/alloy/config.alloy:/etc/alloy/config.alloy:ro
+      - odoo-logs:/var/log/odoo:ro
+      - alloy-data:/var/lib/alloy/data
+
+  postgres-exporter:
+    image: prometheuscommunity/postgres-exporter:v0.19.1
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATA_SOURCE_URI: db:5432/${ODOO_DB:?set ODOO_DB in .env}?sslmode=disable
+      DATA_SOURCE_USER: grafana_ro
+      DATA_SOURCE_PASS: ${GRAFANA_DB_PASSWORD:?set GRAFANA_DB_PASSWORD in .env}
+
+  grafana:
+    image: grafana/grafana:13.2.3
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+      - loki
+    environment:
+      # Served by nginx under /grafana/ on the same origin as Odoo, so the
+      # Grafana session cookie also works inside the dashboard iframe.
+      # Address used in links Grafana generates (share links, alerts). Set
+      # GRAFANA_DOMAIN in .env to the Tailscale name to share links across devices.
+      GF_SERVER_ROOT_URL: "http://${GRAFANA_DOMAIN:-localhost}:${ODOO_PORT:-8069}/grafana/"
+      GF_SERVER_SERVE_FROM_SUB_PATH: "true"
+      GF_SECURITY_ADMIN_USER: admin
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:?set GRAFANA_ADMIN_PASSWORD in .env}
+      GF_SECURITY_ALLOW_EMBEDDING: "true"
+      GF_SECURITY_COOKIE_SAMESITE: lax
+      GF_USERS_ALLOW_SIGN_UP: "false"
+      GF_ANALYTICS_REPORTING_ENABLED: "false"
+      GF_ANALYTICS_CHECK_FOR_UPDATES: "false"
+      GF_DASHBOARDS_DEFAULT_HOME_DASHBOARD_PATH: /var/lib/grafana/dashboards/odoo-performance.json
+      # consumed by provisioning/datasources/datasources.yml
+      ODOO_DB: ${ODOO_DB}
+      GRAFANA_DB_PASSWORD: ${GRAFANA_DB_PASSWORD}
+    volumes:
+      - ./monitoring/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./monitoring/grafana/dashboards:/var/lib/grafana/dashboards:ro
+      - grafana-data:/var/lib/grafana
+
+volumes:
+  odoo-logs:
+  prometheus-data:
+  loki-data:
+  alloy-data:
+  grafana-data:

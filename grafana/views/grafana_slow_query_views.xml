@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="grafana_slow_query_view_list" model="ir.ui.view">
+        <field name="name">grafana.slow.query.list</field>
+        <field name="model">grafana.slow.query</field>
+        <field name="arch" type="xml">
+            <list string="Slow Queries" create="false" edit="false">
+                <field name="request_date"/>
+                <field name="duration_ms" decoration-danger="duration_ms &gt;= 5000"/>
+                <field name="query_hash" optional="hide"/>
+                <field name="query"/>
+                <field name="path" optional="show"/>
+                <field name="user_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="grafana_slow_query_view_form" model="ir.ui.view">
+        <field name="name">grafana.slow.query.form</field>
+        <field name="model">grafana.slow.query</field>
+        <field name="arch" type="xml">
+            <form string="Slow Query" create="false" edit="false">
+                <sheet>
+                    <group>
+                        <group>
+                            <field name="request_date"/>
+                            <field name="duration_ms"/>
+                            <field name="query_hash"/>
+                        </group>
+                        <group>
+                            <field name="request_id"/>
+                            <field name="path"/>
+                            <field name="user_id"/>
+                        </group>
+                    </group>
+                    <field name="query" widget="code" options="{'mode': 'sql'}"/>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="grafana_slow_query_view_search" model="ir.ui.view">
+        <field name="name">grafana.slow.query.search</field>
+        <field name="model">grafana.slow.query</field>
+        <field name="arch" type="xml">
+            <search string="Slow Queries">
+                <field name="query"/>
+                <field name="query_hash"/>
+                <field name="path"/>
+                <filter name="last_24h" string="Last 24 Hours"
+                        domain="[('request_date', '&gt;=', (context_today() - relativedelta(days=1)).strftime('%Y-%m-%d'))]"/>
+                <separator/>
+                <filter name="group_hash" string="Query Fingerprint" context="{'group_by': 'query_hash'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="grafana_slow_query_action" model="ir.actions.act_window">
+        <field name="name">Slow Queries</field>
+        <field name="res_model">grafana.slow.query</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_last_24h': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No slow query logged</p>
+            <p>Group by <b>Query Fingerprint</b> to find the queries that cost the most in total.</p>
+        </field>
+    </record>
+</odoo>

@@ -1,0 +1,525 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* grafana
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 18.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-30 16:33+0000\n"
+"PO-Revision-Date: 2026-10-30 16:33+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: grafana
+#: model:ir.model.constraint,message:grafana.constraint_grafana_dashboard_uid_unique
+msgid "A dashboard with this UID already exists."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__active
+msgid "Active"
+msgstr ""
+
+#. module: grafana
+#: model:res.groups,name:grafana.group_grafana_manager
+msgid "Administrator"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
+msgid "Archived"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__refresh
+msgid "Auto Refresh"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_res_config_settings__grafana_url
+msgid ""
+"Base URL of Grafana as seen by the browser. A same-origin path behind the "
+"reverse proxy (e.g. /grafana) keeps the Grafana session cookie working "
+"inside the embedded iframe."
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
+msgid ""
+"Base URL used to embed dashboards. Prefer a same-origin path such as "
+"/grafana."
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,name:grafana.dashboard_business
+msgid "Business & Database"
+msgstr ""
+
+#. module: grafana
+#: model:res.groups,comment:grafana.group_grafana_user
+msgid "Can open the embedded Grafana dashboards."
+msgstr ""
+
+#. module: grafana
+#: model:res.groups,comment:grafana.group_grafana_manager
+msgid "Can read the slow request/query logs and manage dashboards."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model,name:grafana.model_res_config_settings
+msgid "Config Settings"
+msgstr ""
+
+#. module: grafana
+#: model:ir.ui.menu,name:grafana.menu_grafana_config
+msgid "Configuration"
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,description:grafana.dashboard_postgres
+msgid ""
+"Connections, transactions, cache hit ratio, locks and top queries "
+"(pg_stat_statements)."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__create_uid
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__create_uid
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__create_date
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__create_date
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
+msgid "Dashboard"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__uid
+msgid "Dashboard UID"
+msgstr ""
+
+#. module: grafana
+#: model:ir.actions.act_window,name:grafana.grafana_dashboard_action
+#: model:ir.ui.menu,name:grafana.menu_grafana_dashboard_config
+#: model:ir.ui.menu,name:grafana.menu_grafana_dashboards
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_list
+msgid "Dashboards"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "Day"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__time_from
+msgid "Default Time Range"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__description
+msgid "Description"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
+msgid "Display"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__display_name
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__display_name
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__duration_ms
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__duration_ms
+msgid "Duration (ms)"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_grafana_slow_request__python_time_ms
+msgid "Duration minus SQL time: ORM, business logic, rendering."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_grafana_slow_query__query_hash
+msgid "Fingerprint of the normalised query, used to group identical queries."
+msgstr ""
+
+#. module: grafana
+#: model:ir.actions.client,name:grafana.grafana_embed_action
+#: model:ir.module.category,name:grafana.module_category_grafana
+#: model:ir.ui.menu,name:grafana.menu_grafana_root
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
+#: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
+msgid "Grafana"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model,name:grafana.model_grafana_dashboard
+msgid "Grafana Dashboard"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_res_config_settings__grafana_url
+#: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
+msgid "Grafana URL"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_grafana_dashboard__refresh
+msgid "Grafana refresh interval, e.g. 30s, 1m. Empty disables it."
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.actions.act_window,help:grafana.grafana_slow_query_action
+msgid ""
+"Group by <b>Query Fingerprint</b> to find the queries that cost the most in "
+"total."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__http_method
+msgid "HTTP Method"
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,description:grafana.dashboard_performance
+msgid ""
+"HTTP latency, SQL load, RPC hot spots, cron jobs and worker memory "
+"(Prometheus)."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_grafana_dashboard__kiosk
+msgid "Hide the Grafana navigation chrome in the embedded view."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__id
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__id
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__id
+msgid "ID"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__kiosk
+msgid "Kiosk"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_query_view_search
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "Last 24 Hours"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__write_uid
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__write_uid
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__write_date
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__write_date
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_res_config_settings__grafana_log_retention_days
+msgid "Log Retention (days)"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_res_config_settings__grafana_slow_log_enabled
+#: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
+msgid "Log Slow Requests"
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,name:grafana.dashboard_logs
+msgid "Logs"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
+msgid "Manage Dashboards"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_grafana_slow_request__route
+msgid "Matched route pattern, e.g. /web/dataset/call_kw/<path:path>"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__rpc_method
+msgid "Method"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__rpc_model
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "Model"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__name
+msgid "Name"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.actions.act_window,help:grafana.grafana_slow_query_action
+msgid "No slow query logged"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.actions.act_window,help:grafana.grafana_slow_request_action
+msgid "No slow request logged"
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,description:grafana.dashboard_logs
+msgid "Odoo server logs, errors and access log (Loki)."
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "Over 10 s"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_grafana_slow_query__query
+msgid "Parametrised SQL text (placeholders, no values)."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__path
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__path
+msgid "Path"
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,name:grafana.dashboard_performance
+#: model:ir.ui.menu,name:grafana.menu_grafana_performance
+msgid "Performance"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
+msgid "Performance Log"
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,name:grafana.dashboard_postgres
+msgid "PostgreSQL"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__python_time_ms
+msgid "Python Time (ms)"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__query
+msgid "Query"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_query_view_search
+msgid "Query Fingerprint"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__query_hash
+msgid "Query Hash"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_form
+msgid "RPC"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__request_id
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_form
+msgid "Request"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__request_date
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__request_date
+msgid "Request Date"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.actions.act_window,help:grafana.grafana_slow_request_action
+msgid ""
+"Requests slower than the threshold set in Settings &gt; Grafana are recorded"
+" here, with the SQL queries that exceeded the slow-query threshold."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__route
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "Route"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_form
+msgid "SQL"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__query_count
+msgid "SQL Queries"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__query_time_ms
+msgid "SQL Time (ms)"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model,name:grafana.model_ir_cron
+msgid "Scheduled Actions"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__sequence
+msgid "Sequence"
+msgstr ""
+
+#. module: grafana
+#: model:ir.actions.act_window,name:grafana.grafana_settings_action
+#: model:ir.ui.menu,name:grafana.menu_grafana_settings
+msgid "Settings"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model,name:grafana.model_grafana_slow_request
+msgid "Slow HTTP Request"
+msgstr ""
+
+#. module: grafana
+#: model:ir.actions.act_window,name:grafana.grafana_slow_query_action
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__slow_query_ids
+#: model:ir.ui.menu,name:grafana.menu_grafana_slow_queries
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_query_view_list
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_query_view_search
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_form
+msgid "Slow Queries"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_query_view_form
+msgid "Slow Query"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__slow_query_count
+msgid "Slow Query Count"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_res_config_settings__grafana_slow_query_threshold_ms
+msgid "Slow Query Threshold (ms)"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_form
+msgid "Slow Request"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_res_config_settings__grafana_slow_request_threshold_ms
+msgid "Slow Request Threshold (ms)"
+msgstr ""
+
+#. module: grafana
+#: model:ir.actions.act_window,name:grafana.grafana_slow_request_action
+#: model:ir.ui.menu,name:grafana.menu_grafana_slow_requests
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_graph
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_list
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_pivot
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "Slow Requests"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model,name:grafana.model_grafana_slow_query
+msgid "Slow SQL Query"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__status_code
+msgid "Status Code"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
+msgid ""
+"Store requests and SQL queries above the thresholds, for analysis in Odoo "
+"and Grafana."
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_form
+msgid "Timing"
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,help:grafana.field_grafana_dashboard__uid
+msgid "UID of the dashboard in Grafana (the /d/<uid> part)."
+msgstr ""
+
+#. module: grafana
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__user_id
+#: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__user_id
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "User"
+msgstr ""
+
+#. module: grafana
+#: model:grafana.dashboard,description:grafana.dashboard_business
+msgid ""
+"User activity, mail queue, cron health, largest tables, slow request log "
+"(PostgreSQL)."
+msgstr ""
+
+#. module: grafana
+#: model:res.groups,name:grafana.group_grafana_user
+msgid "Viewer"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
+msgid "What this dashboard shows..."
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_slow_request_view_search
+msgid "With Slow Queries"
+msgstr ""
+
+#. module: grafana
+#: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
+msgid "e.g. Sales KPIs"
+msgstr ""

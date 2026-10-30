@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <record id="icp_slow_log_enabled" model="ir.config_parameter">
+        <field name="key">grafana.slow_log_enabled</field>
+        <field name="value">True</field>
+    </record>
+    <record id="icp_grafana_url" model="ir.config_parameter">
+        <field name="key">grafana.grafana_url</field>
+        <field name="value">/grafana</field>
+    </record>
+
+    <!-- UIDs match the dashboards provisioned in docker/monitoring/grafana/dashboards -->
+    <record id="dashboard_performance" model="grafana.dashboard">
+        <field name="name">Performance</field>
+        <field name="uid">odoo-performance</field>
+        <field name="sequence">10</field>
+        <field name="description">HTTP latency, SQL load, RPC hot spots, cron jobs and worker memory (Prometheus).</field>
+    </record>
+    <record id="dashboard_logs" model="grafana.dashboard">
+        <field name="name">Logs</field>
+        <field name="uid">odoo-logs</field>
+        <field name="sequence">20</field>
+        <field name="description">Odoo server logs, errors and access log (Loki).</field>
+    </record>
+    <record id="dashboard_business" model="grafana.dashboard">
+        <field name="name">Business &amp; Database</field>
+        <field name="uid">odoo-business</field>
+        <field name="sequence">30</field>
+        <field name="time_from">now-7d</field>
+        <field name="refresh">5m</field>
+        <field name="description">User activity, mail queue, cron health, largest tables, slow request log (PostgreSQL).</field>
+    </record>
+    <record id="dashboard_postgres" model="grafana.dashboard">
+        <field name="name">PostgreSQL</field>
+        <field name="uid">odoo-postgres</field>
+        <field name="sequence">40</field>
+        <field name="description">Connections, transactions, cache hit ratio, locks and top queries (pg_stat_statements).</field>
+    </record>
+</odoo>

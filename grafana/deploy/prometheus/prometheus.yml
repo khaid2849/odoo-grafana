@@ -1,0 +1,24 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+scrape_configs:
+  # grafana /metrics. Odoo is reached directly on the docker
+  # network: nginx refuses /metrics from outside. Any HTTP worker can answer,
+  # the module aggregates all workers (PROMETHEUS_MULTIPROC_DIR).
+  - job_name: odoo
+    metrics_path: /metrics
+    static_configs:
+      - targets: ['odoo:8069']
+    # Uncomment when grafana_metrics_token / ODOO_METRICS_TOKEN is set in Odoo:
+    # authorization:
+    #   type: Bearer
+    #   credentials_file: /etc/prometheus/odoo_metrics_token
+
+  - job_name: postgres
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+
+  - job_name: prometheus
+    static_configs:
+      - targets: ['localhost:9090']

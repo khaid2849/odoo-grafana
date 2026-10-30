@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.grafana</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="Grafana" string="Grafana" name="grafana"
+                     groups="grafana.group_grafana_manager">
+                    <block title="Grafana" name="grafana_setting_container">
+                        <setting id="grafana_url_setting" string="Grafana URL"
+                                 help="Base URL used to embed dashboards. Prefer a same-origin path such as /grafana.">
+                            <field name="grafana_url"/>
+                            <div class="mt8">
+                                <button type="action" name="%(grafana.grafana_dashboard_action)d"
+                                        string="Manage Dashboards" icon="oi-arrow-right" class="btn-link"/>
+                            </div>
+                        </setting>
+                    </block>
+                    <block title="Performance Log" name="grafana_slow_log_container">
+                        <setting id="grafana_slow_log_setting" string="Log Slow Requests"
+                                 help="Store requests and SQL queries above the thresholds, for analysis in Odoo and Grafana.">
+                            <field name="grafana_slow_log_enabled"/>
+                            <div class="content-group" invisible="not grafana_slow_log_enabled">
+                                <div class="row mt16">
+                                    <label for="grafana_slow_request_threshold_ms" class="col-lg-5 o_light_label"/>
+                                    <field name="grafana_slow_request_threshold_ms"/>
+                                </div>
+                                <div class="row">
+                                    <label for="grafana_slow_query_threshold_ms" class="col-lg-5 o_light_label"/>
+                                    <field name="grafana_slow_query_threshold_ms"/>
+                                </div>
+                                <div class="row">
+                                    <label for="grafana_log_retention_days" class="col-lg-5 o_light_label"/>
+                                    <field name="grafana_log_retention_days"/>
+                                </div>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="grafana_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'grafana', 'bin_size': False}</field>
+    </record>
+</odoo>

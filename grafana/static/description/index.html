@@ -1,0 +1,195 @@
+<section class="container" style="max-width: 1100px; font-family: 'Inter', 'Noto Sans', Arial, sans-serif; color: #1f2430;">
+
+    <!-- Hero -->
+    <div class="row" style="padding: 40px 0 24px;">
+        <div class="col-12 text-center">
+            <img src="icon.png" alt="Grafana" style="width: 72px; height: 72px; margin-bottom: 12px;"/>
+            <h1 style="font-size: 40px; font-weight: 700; margin: 0 0 8px;">Grafana for Odoo 18</h1>
+            <p style="font-size: 19px; color: #5b6170; max-width: 760px; margin: 0 auto;">
+                See where your Odoo spends its time. Prometheus metrics for every route and model method,
+                a slow request and slow SQL query log, JSON logs for Loki, and Grafana dashboards right
+                inside the Odoo backend.
+            </p>
+        </div>
+    </div>
+
+    <!-- Feature grid -->
+    <div class="row" style="padding: 8px 0 32px;">
+        <div class="col-md-6 col-lg-3" style="padding: 8px;">
+            <div style="height: 100%; border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px;">
+                <h4 style="color: #f46800; font-size: 17px; font-weight: 700;">/metrics endpoint</h4>
+                <p style="color: #5b6170; font-size: 14px; margin: 0;">
+                    Request rate, latency histograms, SQL queries and SQL time per route, ORM calls per
+                    model.method, cron runs and duration, worker memory. Aggregated across all prefork workers.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3" style="padding: 8px;">
+            <div style="height: 100%; border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px;">
+                <h4 style="color: #f46800; font-size: 17px; font-weight: 700;">Slow request log</h4>
+                <p style="color: #5b6170; font-size: 14px; margin: 0;">
+                    Requests above a threshold are stored with their user, model.method, SQL count, SQL vs
+                    Python time and the slow queries themselves, grouped by query fingerprint.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3" style="padding: 8px;">
+            <div style="height: 100%; border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px;">
+                <h4 style="color: #f46800; font-size: 17px; font-weight: 700;">Structured logs</h4>
+                <p style="color: #5b6170; font-size: 14px; margin: 0;">
+                    One JSON object per log line with database, user, query count and timing, ready to be
+                    shipped to Loki and filtered in Grafana.
+                </p>
+            </div>
+        </div>
+        <div class="col-md-6 col-lg-3" style="padding: 8px;">
+            <div style="height: 100%; border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px;">
+                <h4 style="color: #f46800; font-size: 17px; font-weight: 700;">Embedded dashboards</h4>
+                <p style="color: #5b6170; font-size: 14px; margin: 0;">
+                    Four ready-made dashboards (Performance, Logs, Business &amp; Database, PostgreSQL) open
+                    in a Grafana app inside Odoo, following the Odoo light/dark theme.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Embedded view -->
+    <div class="row" style="padding: 16px 0;">
+        <div class="col-12">
+            <h2 style="font-size: 26px; font-weight: 700;">Your dashboards, inside Odoo</h2>
+            <p style="color: #5b6170; font-size: 16px;">
+                The <b>Grafana</b> app lists the dashboards you configure and shows them in kiosk mode.
+                Add any Grafana dashboard by its UID in <i>Grafana &gt; Configuration &gt; Dashboards</i>.
+            </p>
+            <img src="screenshot_embed.png" alt="Grafana dashboards embedded in Odoo" class="img-fluid"
+                 style="border: 1px solid #e6e8ee; border-radius: 10px; box-shadow: 0 6px 24px rgba(20, 24, 40, 0.10);"/>
+        </div>
+    </div>
+
+    <!-- Performance dashboard -->
+    <div class="row" style="padding: 32px 0 16px;">
+        <div class="col-12">
+            <h2 style="font-size: 26px; font-weight: 700;">Find the slow parts</h2>
+            <ul style="color: #5b6170; font-size: 16px;">
+                <li><b>Time spent per route</b> and <b>most expensive model methods</b> show where worker time goes.</li>
+                <li><b>SQL queries per request</b> reveals N+1 patterns: hundreds of queries for one call.</li>
+                <li><b>Share of request time spent in SQL</b> tells a missing index apart from slow Python code.</li>
+                <li>Cron runs, failures and p95 duration, worker memory, warnings and errors per minute.</li>
+            </ul>
+            <img src="screenshot_performance.png" alt="Odoo performance dashboard" class="img-fluid"
+                 style="border: 1px solid #e6e8ee; border-radius: 10px; box-shadow: 0 6px 24px rgba(20, 24, 40, 0.10);"/>
+        </div>
+    </div>
+
+    <!-- Slow log -->
+    <div class="row" style="padding: 32px 0 16px;">
+        <div class="col-12">
+            <h2 style="font-size: 26px; font-weight: 700;">Slow request and slow SQL query log</h2>
+            <p style="color: #5b6170; font-size: 16px;">
+                Every request slower than the threshold is recorded with the queries that exceeded the
+                slow-query threshold. Use list, graph and pivot views to group by route, model, method or
+                query fingerprint. Old entries are purged automatically.
+            </p>
+        </div>
+        <div class="col-lg-6" style="padding: 8px;">
+            <img src="screenshot_slow_requests.png" alt="Slow requests list" class="img-fluid"
+                 style="border: 1px solid #e6e8ee; border-radius: 10px;"/>
+        </div>
+        <div class="col-lg-6" style="padding: 8px;">
+            <img src="screenshot_slow_request_form.png" alt="Slow request with its slow SQL queries" class="img-fluid"
+                 style="border: 1px solid #e6e8ee; border-radius: 10px;"/>
+        </div>
+    </div>
+
+    <!-- PostgreSQL -->
+    <div class="row" style="padding: 32px 0 16px;">
+        <div class="col-12">
+            <h2 style="font-size: 26px; font-weight: 700;">PostgreSQL health</h2>
+            <p style="color: #5b6170; font-size: 16px;">
+                Connections, cache hit ratio, locks, dead tuples, top queries from
+                <code>pg_stat_statements</code>, sequential scans on large tables (index candidates) and
+                unused indexes. Grafana reads the database through a dedicated read-only role.
+            </p>
+            <img src="screenshot_postgres.png" alt="PostgreSQL dashboard" class="img-fluid"
+                 style="border: 1px solid #e6e8ee; border-radius: 10px; box-shadow: 0 6px 24px rgba(20, 24, 40, 0.10);"/>
+        </div>
+    </div>
+
+    <!-- Settings -->
+    <div class="row" style="padding: 32px 0 16px;">
+        <div class="col-lg-5">
+            <h2 style="font-size: 26px; font-weight: 700;">Simple settings</h2>
+            <p style="color: #5b6170; font-size: 16px;">
+                In <i>Settings &gt; Grafana</i>: the Grafana URL, whether slow requests are logged, the
+                slow request and slow query thresholds and how long the log is kept.
+            </p>
+            <p style="color: #5b6170; font-size: 16px;">
+                Two access groups: <b>Viewer</b> opens the dashboards, <b>Administrator</b> also reads the
+                slow logs and manages dashboards.
+            </p>
+        </div>
+        <div class="col-lg-7">
+            <img src="screenshot_settings.png" alt="Grafana settings" class="img-fluid"
+                 style="border: 1px solid #e6e8ee; border-radius: 10px;"/>
+        </div>
+    </div>
+
+    <!-- Installation -->
+    <div class="row" style="padding: 32px 0 16px;">
+        <div class="col-12">
+            <h2 style="font-size: 26px; font-weight: 700;">Installation</h2>
+            <ol style="color: #3a404d; font-size: 15px; line-height: 1.7;">
+                <li>Install the Python dependency: <code>pip install prometheus-client</code>.</li>
+                <li>Load the module server-wide in the Odoo configuration file, so every worker is instrumented:
+<pre style="background: #f5f6f8; border-radius: 6px; padding: 10px 14px; margin: 6px 0;">server_wide_modules = base,web,grafana
+grafana_log_json = True</pre>
+                    With <code>workers &gt; 0</code>, also set the environment variable
+                    <code>PROMETHEUS_MULTIPROC_DIR</code> to an empty directory (a tmpfs is ideal) so metrics
+                    are aggregated across workers.
+                </li>
+                <li>Restart Odoo and install the <b>Grafana</b> app.</li>
+                <li>Start the monitoring stack. The module ships a Docker Compose stack in its
+                    <code>deploy</code> folder: Prometheus, Loki, Grafana Alloy, Grafana and postgres-exporter,
+                    with data sources and the four dashboards provisioned. Follow <code>deploy/README.md</code>.</li>
+                <li>Serve Grafana under <code>/grafana/</code> on the same domain as Odoo (an nginx snippet is
+                    included), log in to Grafana once, then open <b>Grafana &gt; Dashboards</b> in Odoo.</li>
+            </ol>
+            <p style="color: #5b6170; font-size: 15px;">
+                Already running Prometheus and Grafana? Just scrape <code>http://&lt;odoo&gt;:8069/metrics</code>
+                and import the dashboards from <code>deploy/grafana/dashboards</code>. The endpoint can be
+                protected with a bearer token (<code>ODOO_METRICS_TOKEN</code>) and should not be exposed
+                publicly.
+            </p>
+        </div>
+    </div>
+
+    <!-- Compatibility / support -->
+    <div class="row" style="padding: 24px 0 40px;">
+        <div class="col-md-6" style="padding: 8px;">
+            <div style="border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px; height: 100%;">
+                <h4 style="font-size: 17px; font-weight: 700;">Compatibility</h4>
+                <ul style="color: #5b6170; font-size: 14px; margin: 0;">
+                    <li>Odoo 18.0 Community and Enterprise</li>
+                    <li>Threaded and prefork (workers) modes</li>
+                    <li>Tested with Grafana 13, Prometheus 3, Loki 3, PostgreSQL 16</li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-6" style="padding: 8px;">
+            <div style="border: 1px solid #e6e8ee; border-radius: 10px; padding: 18px; height: 100%;">
+                <h4 style="font-size: 17px; font-weight: 700;">Support</h4>
+                <p style="color: #5b6170; font-size: 14px; margin: 0;">
+                    Source code, documentation and issue tracker:
+                    <a href="https://github.com/khaid2849/odoo-grafana" target="_blank">github.com/khaid2849/odoo-grafana</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12 text-center" style="color: #8a90a0; font-size: 12px; padding-bottom: 24px;">
+            Grafana is a trademark of Grafana Labs. This module is an independent integration and is not
+            affiliated with or endorsed by Grafana Labs.
+        </div>
+    </div>
+</section>
