@@ -55,6 +55,7 @@ class TestSlowLog(TransactionCase):
         entry = next(d for d in config['dashboards'] if d['id'] == dashboard.id)
         self.assertTrue(entry['url'].startswith('https://grafana.example/d/odoo-performance?orgId=1'))
         self.assertIn('kiosk', entry['url'])
+        self.assertIn('hideLogo=true', entry['url'])
 
     def test_cron_metrics(self):
         cron = self.env['ir.cron'].create({

@@ -15,7 +15,7 @@ class GrafanaDashboard(models.Model):
     sequence = fields.Integer(default=10)
     active = fields.Boolean(default=True)
     description = fields.Text(translate=True)
-    kiosk = fields.Boolean(default=True, help="Hide the Grafana navigation chrome in the embedded view.")
+    kiosk = fields.Boolean(default=True, help="Hide the Grafana navigation chrome and branding footer in the embedded view.")
     time_from = fields.Char(string='Default Time Range', default='now-6h', required=True)
     refresh = fields.Char(string='Auto Refresh', default='30s', help="Grafana refresh interval, e.g. 30s, 1m. Empty disables it.")
 
@@ -30,7 +30,8 @@ class GrafanaDashboard(models.Model):
             params['refresh'] = self.refresh
         query = urlencode(params)
         if self.kiosk:
-            query += '&kiosk'
+            # hideLogo drops the "Powered by Grafana" footer that covers the bottom panels
+            query += '&kiosk&hideLogo=true'
         return f"{base_url.rstrip('/')}/d/{self.uid}?{query}"
 
     @api.model
