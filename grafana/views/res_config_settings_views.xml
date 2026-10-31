@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//form" position="inside">
-                <app data-string="Grafana" string="Grafana" name="grafana"
+                <app data-string="Grafana" string="Grafana" name="grafana" logo="/grafana/static/description/icon.png"
                      groups="grafana.group_grafana_manager">
                     <block title="Grafana" name="grafana_setting_container">
                         <setting id="grafana_url_setting" string="Grafana URL"
@@ -47,7 +47,6 @@
         <field name="name">Settings</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>
-        <field name="target">inline</field>
         <field name="context">{'module': 'grafana', 'bin_size': False}</field>
     </record>
 </odoo>

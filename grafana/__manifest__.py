@@ -1,16 +1,17 @@
 {
     'name': 'Grafana',
-    'version': '18.0.1.0.0',
+    'version': '19.0.1.0.0',
     'category': 'Extra Tools',
     'summary': 'Monitor Odoo with Grafana: Prometheus metrics, slow request/SQL log, JSON logs for Loki, '
                'dashboards embedded in Odoo',
     'description': """
 Grafana
 =======
-Observability for Odoo 18 with the Grafana stack (Prometheus, Loki, Grafana):
+Observability for Odoo 19 with the Grafana stack (Prometheus, Loki, Grafana):
 
 * ``/metrics`` Prometheus endpoint, aggregated across prefork workers: HTTP
-  latency per route, SQL count/time, ORM calls per model/method, cron runs
+  latency per route, SQL count/time, ORM calls per model/method (web client
+  and JSON-2 API), cron runs
   and duration, worker memory, warning/error log rate.
 * Slow request and slow SQL query log, browsable in Odoo and queried by
   Grafana from PostgreSQL.
@@ -49,6 +50,7 @@ folder of the module, see ``deploy/README.md``.
         ],
     },
     'images': ['static/description/banner.png'],
+    'icon': '/grafana/static/description/icon.png',
     'post_load': 'post_load',
     'installable': True,
     'application': True,
