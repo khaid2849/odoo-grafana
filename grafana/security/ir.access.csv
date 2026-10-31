@@ -1,0 +1,5 @@
+id,name,model_id,group_id/id,operation,domain
+access_grafana_dashboard_user,grafana.dashboard.user,grafana.dashboard,grafana.group_grafana_user,r,
+access_grafana_dashboard_manager,grafana.dashboard.manager,grafana.dashboard,grafana.group_grafana_manager,crud,
+access_grafana_slow_request_manager,grafana.slow.request.manager,grafana.slow.request,grafana.group_grafana_manager,rd,
+access_grafana_slow_query_manager,grafana.slow.query.manager,grafana.slow.query,grafana.group_grafana_manager,rd,

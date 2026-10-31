@@ -66,9 +66,9 @@ class TestMetricsEndpoint(HttpCase):
 
     def test_slow_request_is_logged(self):
         icp = self.env['ir.config_parameter'].sudo()
-        icp.set_param('grafana.slow_log_enabled', 'True')
-        icp.set_param('grafana.slow_request_threshold_ms', '0')
-        icp.set_param('grafana.slow_query_threshold_ms', '0')
+        icp.set_bool('grafana.slow_log_enabled', True)
+        icp.set_int('grafana.slow_request_threshold_ms', 0)
+        icp.set_int('grafana.slow_query_threshold_ms', 0)
         self.authenticate('admin', 'admin')
         self.make_jsonrpc_request('/web/dataset/call_kw/res.partner/search_read', {
             'model': 'res.partner', 'method': 'search_read', 'args': [[]], 'kwargs': {'limit': 1},
@@ -85,9 +85,9 @@ class TestMetricsEndpoint(HttpCase):
 
     def test_fast_queries_are_not_logged(self):
         icp = self.env['ir.config_parameter'].sudo()
-        icp.set_param('grafana.slow_log_enabled', 'True')
-        icp.set_param('grafana.slow_request_threshold_ms', '0')
-        icp.set_param('grafana.slow_query_threshold_ms', '60000')
+        icp.set_bool('grafana.slow_log_enabled', True)
+        icp.set_int('grafana.slow_request_threshold_ms', 0)
+        icp.set_int('grafana.slow_query_threshold_ms', 60000)
         self.authenticate('admin', 'admin')
         self.make_jsonrpc_request('/web/dataset/call_kw/res.partner/search_count', {
             'model': 'res.partner', 'method': 'search_count', 'args': [[]], 'kwargs': {},
@@ -98,8 +98,8 @@ class TestMetricsEndpoint(HttpCase):
 
     def test_slow_log_disabled(self):
         icp = self.env['ir.config_parameter'].sudo()
-        icp.set_param('grafana.slow_log_enabled', False)
-        icp.set_param('grafana.slow_request_threshold_ms', '0')
+        icp.set_bool('grafana.slow_log_enabled', False)
+        icp.set_int('grafana.slow_request_threshold_ms', 0)
         before = self.env['grafana.slow.request'].search_count([])
         self.url_open('/web/login')
         self.assertEqual(self.env['grafana.slow.request'].search_count([]), before)

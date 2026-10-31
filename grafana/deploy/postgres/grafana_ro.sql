@@ -30,7 +30,7 @@ BEGIN
         ('mail_mail', 'id, state, create_date'),
         ('res_users', 'id, active, share, create_date'),
         ('res_users_log', 'id, create_uid, create_date'),
-        ('res_device_log', 'id, user_id, last_activity, first_activity, revoked, platform, browser, device_type'),
+        ('res_device_log', 'id, user_id, last_activity, first_activity, revoked'),
         ('ir_module_module', 'id, name, state, latest_version, application')
     ) AS t(table_name, columns)
     LOOP

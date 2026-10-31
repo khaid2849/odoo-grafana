@@ -2,7 +2,7 @@
 
 ![Grafana for Odoo](grafana/static/description/banner.png)
 
-Odoo 19 module that plugs Odoo into the Grafana stack (Prometheus, Loki,
+Odoo 20 module that plugs Odoo into the Grafana stack (Prometheus, Loki,
 Grafana) to monitor performance, track logs and visualise data.
 
 * **`/metrics` Prometheus endpoint**, aggregated across prefork workers: HTTP

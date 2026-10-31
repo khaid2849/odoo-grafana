@@ -36,7 +36,7 @@ class GrafanaDashboard(models.Model):
     def get_embed_config(self) -> dict:
         """Dashboards visible to the current user, with ready-to-embed URLs."""
         # sudo: the Grafana URL is a technical parameter users cannot read directly
-        base_url = self.env['ir.config_parameter'].sudo().get_param(ICP_GRAFANA_URL, '/grafana')
+        base_url = self.env['ir.config_parameter'].sudo().get_str(ICP_GRAFANA_URL, '/grafana')
         dashboards = self.search([])
         return {
             'base_url': base_url,

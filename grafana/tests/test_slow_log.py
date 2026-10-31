@@ -40,7 +40,7 @@ class TestSlowLog(TransactionCase):
         self.assertEqual(len(hashes), 1, "whitespace differences must not change the fingerprint")
 
     def test_autovacuum_purges_old_logs(self):
-        self.env['ir.config_parameter'].sudo().set_param('grafana.log_retention_days', 7)
+        self.env['ir.config_parameter'].sudo().set_int('grafana.log_retention_days', 7)
         old, recent = self._log(), self._log()
         old.request_date = fields.Datetime.now() - datetime.timedelta(days=8)
         old_queries = old.slow_query_ids
@@ -51,7 +51,7 @@ class TestSlowLog(TransactionCase):
 
     def test_embed_config(self):
         dashboard = self.env.ref('grafana.dashboard_performance')
-        self.env['ir.config_parameter'].sudo().set_param('grafana.grafana_url', 'https://grafana.example/')
+        self.env['ir.config_parameter'].sudo().set_str('grafana.grafana_url', 'https://grafana.example/')
         config = self.env['grafana.dashboard'].get_embed_config()
         entry = next(d for d in config['dashboards'] if d['id'] == dashboard.id)
         self.assertTrue(entry['url'].startswith('https://grafana.example/d/odoo-performance?orgId=1'))

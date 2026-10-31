@@ -2,13 +2,14 @@
 
 The patches stay as thin as possible:
 
-* ``Application.__call__`` times the whole request, captures the status code
-  and installs a SQL hook through ``threading.current_thread().query_hooks``,
+* ``odoo.http.router.Application.__call__`` times the whole request,
+  captures the status code and installs a SQL hook through
+  ``threading.current_thread().query_hooks``,
   the extension point ``odoo.sql_db.Cursor.execute`` already provides (the
   profiler uses the same one), so ``execute`` itself is left untouched. The
   hook runs before the query and returns a callback that receives its
   duration once it is done.
-* ``Request._serve_ir_http`` records the matched route pattern (low
+* ``odoo.http.router.serve_ir_http`` records the matched route pattern (low
   cardinality, unlike the raw path), the RPC model/method of web client
   (``/web/dataset/call_kw``) and JSON-2 (``/json/2``) calls and the
   per-database thresholds, read from ``ir.config_parameter`` while a cursor
@@ -26,9 +27,10 @@ from collections.abc import Callable
 
 import psutil
 
-from odoo import SUPERUSER_ID, api, http
+from odoo import SUPERUSER_ID, api
+from odoo.http import router
 from odoo.modules.registry import Registry
-from odoo.tools import config, str2bool
+from odoo.tools import config
 
 from . import metrics
 
@@ -91,13 +93,10 @@ class RequestStats:
             return  # module not installed in this database
         # sudo: reading technical parameters, whatever the (maybe public) user
         icp = env['ir.config_parameter'].sudo()
-        # a Boolean settings field deletes the parameter when unticked
-        self.log_enabled = str2bool(icp.get_param(ICP_LOG_ENABLED, 'False'), default=False)
-        try:
-            self.slow_request_threshold = float(icp.get_param(ICP_SLOW_REQUEST_MS, 2000)) / 1000.0
-            self.slow_query_threshold = float(icp.get_param(ICP_SLOW_QUERY_MS, 500)) / 1000.0
-        except ValueError:
-            _logger.warning("Invalid slow-log threshold in ir.config_parameter, keeping defaults")
+        # the typed getters return the default for a missing or invalid value
+        self.log_enabled = icp.get_bool(ICP_LOG_ENABLED)
+        self.slow_request_threshold = icp.get_float(ICP_SLOW_REQUEST_MS, 2000) / 1000.0
+        self.slow_query_threshold = icp.get_float(ICP_SLOW_QUERY_MS, 500) / 1000.0
 
 
 def current_stats() -> RequestStats | None:
@@ -116,7 +115,7 @@ def _persist_slow_request(dbname: str, vals: dict, queries: list) -> None:
     if registry is None or 'grafana.slow.request' not in registry:
         return
     thread = threading.current_thread()
-    # keep the werkzeug access log figures about the request, not this insert
+    # keep the access log figures about the request, not this insert
     saved = getattr(thread, 'query_count', None), getattr(thread, 'query_time', None)
     try:
         with registry.cursor() as cr:
@@ -203,44 +202,46 @@ def _instrumented_call(original):
 
 
 def _instrumented_serve_ir_http(original):
-    def _serve_ir_http(self, rule, args):
+    def serve_ir_http(request, rule, args):
         stats = current_stats()
         if stats is None:
-            return original(self, rule, args)
+            return original(request, rule, args)
         stats.route = rule.rule
-        stats.uid = self.session.uid
-        stats.load_thresholds(self.env)
+        stats.uid = request.session.uid
+        stats.load_thresholds(request.env)
         try:
-            return original(self, rule, args)
+            return original(request, rule, args)
         finally:
             model = method = None
             if rule.rule.startswith(CALL_KW_PREFIX):
-                params = getattr(self, 'params', None) or {}
+                params = getattr(request, 'params', None) or {}
                 model, method = params.get('model'), params.get('method')
             elif rule.rule == JSON2_ROUTE:
                 model, method = args.get('__model__'), args.get('__method__')
             # Only label real model methods: both values come from the
             # client and must not create unbounded metric series.
             if (isinstance(model, str) and isinstance(method, str)
-                    and model in self.registry
+                    and model in request.registry
                     and METHOD_NAME_RE.fullmatch(method)
-                    and callable(getattr(self.registry[model], method, None))):
+                    and callable(getattr(request.registry[model], method, None))):
                 stats.model, stats.method = model, method
-    return _serve_ir_http
+    return serve_ir_http
 
 
 def _labelled(original, route_label):
-    def wrapper(self, *args, **kwargs):
+    def wrapper(*args, **kwargs):
         stats = current_stats()
         if stats is not None:
             stats.route = route_label
-        return original(self, *args, **kwargs)
+        return original(*args, **kwargs)
     return wrapper
 
 
 def patch_http() -> None:
-    http.Application.__call__ = _instrumented_call(http.Application.__call__)
-    http.Request._serve_ir_http = _instrumented_serve_ir_http(http.Request._serve_ir_http)
-    http.Request._serve_static = _labelled(http.Request._serve_static, 'static')
-    http.Request._serve_nodb = _labelled(http.Request._serve_nodb, 'nodb')
-    http.Request._serve_ir_http_fallback = _labelled(http.Request._serve_ir_http_fallback, 'fallback')
+    # serve_db() and Application.__call__ look these functions up in the
+    # router module globals at call time, so rebinding them is enough.
+    router.Application.__call__ = _instrumented_call(router.Application.__call__)
+    router.serve_ir_http = _instrumented_serve_ir_http(router.serve_ir_http)
+    router.serve_static = _labelled(router.serve_static, 'static')
+    router.serve_nodb = _labelled(router.serve_nodb, 'nodb')
+    router._serve_ir_http_fallback = _labelled(router._serve_ir_http_fallback, 'fallback')

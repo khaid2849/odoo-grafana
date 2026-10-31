@@ -2,7 +2,7 @@ import { Component, onWillStart, useState } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 import { registry } from "@web/core/registry";
 import { useService } from "@web/core/utils/hooks";
-import { standardActionServiceProps } from "@web/webclient/actions/action_service";
+import { standardActionServiceProps } from "@web/webclient/actions/action_plugin";
 
 export class GrafanaEmbed extends Component {
     static template = "grafana.GrafanaEmbed";

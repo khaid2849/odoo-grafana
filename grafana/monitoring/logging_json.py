@@ -1,7 +1,7 @@
 """Structured (one JSON object per line) logging for Loki.
 
-Odoo's text format spreads tracebacks over many lines and mixes free text
-with the access-log perf figures, which makes Loki queries fragile. When
+Odoo's text format spreads tracebacks over many lines and packs the access
+log figures in the message text, which makes Loki queries fragile. When
 ``grafana_log_json = True`` is set in odoo.conf (or ``ODOO_LOG_JSON=1`` in the
 environment) the formatter of every root handler is replaced by
 :class:`JsonFormatter`. A counting handler feeding ``odoo_log_messages_total``
@@ -11,14 +11,11 @@ import datetime
 import json
 import logging
 import os
-import re
 import threading
 
 from odoo.tools import config, str2bool
 
 from . import metrics
-
-ANSI_RE = re.compile(r'\x1b\[[0-9;]*m')
 
 
 class JsonFormatter(logging.Formatter):
@@ -44,22 +41,27 @@ class JsonFormatter(logging.Formatter):
 
     @staticmethod
     def _add_access_log_fields(record: logging.LogRecord, payload: dict) -> None:
-        # werkzeug access lines: '"%s" %s %s' % (request_line, code, size), plus
-        # Odoo's PerfFilter figures "query_count query_time remaining_time".
-        perf = ANSI_RE.sub('', getattr(record, 'perf_info', '') or '').split()
-        if len(perf) >= 3 and perf[0] != '-':
-            try:
-                payload['query_count'] = int(perf[0])
-                payload['query_time'] = float(perf[1])
-                payload['remaining_time'] = float(perf[2])
-            except ValueError:
-                pass
-        if record.name == 'werkzeug' and isinstance(record.args, tuple) and len(record.args) == 3:
-            request_line, status, _size = record.args
-            parts = str(request_line).split(' ')
-            if len(parts) >= 2:
-                payload['http_method'], payload['path'] = parts[0], parts[1].split('?', 1)[0]
-            payload['status'] = str(status)
+        # odoo.http.server access lines carry their figures as record
+        # attributes; the request line is "METHOD target[#model.method] HTTP/x".
+        request_line = getattr(record, 'http_request_line', None)
+        if not request_line:
+            return
+        parts = str(request_line).split(' ')
+        if len(parts) < 2 or parts[0] == '-':
+            return
+        target, _sep, rpc = parts[1].partition('#')
+        payload['http_method'], payload['path'] = parts[0], target.split('?', 1)[0]
+        if rpc:
+            payload['rpc'] = rpc
+        status = getattr(record, 'http_response_status', '-')
+        if status != '-':
+            payload['status'] = str(int(status))
+        try:
+            payload['query_count'] = int(record.query_count)
+            payload['query_time'] = round(float(record.query_time), 3)
+            payload['remaining_time'] = round(float(record.remaining_time), 3)
+        except (AttributeError, TypeError, ValueError):
+            pass
 
 
 class MetricsLogHandler(logging.Handler):

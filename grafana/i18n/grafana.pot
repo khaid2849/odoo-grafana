@@ -4,16 +4,43 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 19.0\n"
+"Project-Id-Version: Odoo Server 20.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 02:06+0000\n"
-"PO-Revision-Date: 2026-10-31 02:06+0000\n"
+"POT-Creation-Date: 2026-10-31 02:12+0000\n"
+"PO-Revision-Date: 2026-10-31 02:12+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
+
+#. module: grafana
+#: model:ir.module.module,description:base.module_grafana
+msgid ""
+"\n"
+"Grafana\n"
+"=======\n"
+"Observability for Odoo 20 with the Grafana stack (Prometheus, Loki, Grafana):\n"
+"\n"
+"* ``/metrics`` Prometheus endpoint, aggregated across prefork workers: HTTP\n"
+"  latency per route, SQL count/time, ORM calls per model/method (web client\n"
+"  and JSON-2 API), cron runs\n"
+"  and duration, worker memory, warning/error log rate.\n"
+"* Slow request and slow SQL query log, browsable in Odoo and queried by\n"
+"  Grafana from PostgreSQL.\n"
+"* One-JSON-object-per-line log format, ready for Loki.\n"
+"* Grafana dashboards embedded in the Odoo backend.\n"
+"\n"
+"Load it server-wide so the instrumentation is active in every process::\n"
+"\n"
+"    server_wide_modules = base,web,grafana\n"
+"    grafana_log_json = True\n"
+"\n"
+"A ready-to-run Docker stack (Prometheus, Loki, Alloy, Grafana,\n"
+"postgres-exporter) and the provisioned dashboards ship in the ``deploy``\n"
+"folder of the module, see ``deploy/README.md``.\n"
+msgstr ""
 
 #. module: grafana
 #: model:ir.model.constraint,message:grafana.constraint_grafana_dashboard_uid_unique
@@ -172,6 +199,7 @@ msgstr ""
 
 #. module: grafana
 #: model:ir.actions.client,name:grafana.grafana_embed_action
+#: model:ir.module.module,shortdesc:base.module_grafana
 #: model:ir.ui.menu,name:grafana.menu_grafana_root
 #: model:res.groups.privilege,name:grafana.res_groups_privilege_grafana
 #: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
@@ -292,8 +320,20 @@ msgid "Model"
 msgstr ""
 
 #. module: grafana
+#: model:ir.module.module,summary:base.module_grafana
+msgid ""
+"Monitor Odoo with Grafana: Prometheus metrics, slow request/SQL log, JSON "
+"logs for Loki, dashboards embedded in Odoo"
+msgstr ""
+
+#. module: grafana
 #: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__name
 msgid "Name"
+msgstr ""
+
+#. module: grafana
+#: model:res.groups.privilege,placeholder:grafana.res_groups_privilege_grafana
+msgid "No"
 msgstr ""
 
 #. module: grafana
@@ -422,7 +462,7 @@ msgstr ""
 
 #. module: grafana
 #: model:ir.model,name:grafana.model_ir_cron
-msgid "Scheduled Actions"
+msgid "Scheduled Action"
 msgstr ""
 
 #. module: grafana

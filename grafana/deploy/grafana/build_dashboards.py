@@ -247,10 +247,10 @@ def logs_dashboard():
         'sum(count_over_time({job="odoo", db=~"$db", level="WARNING"}[$__range]))', instant=True),
         'short', [(50, 'orange')]), 6, 4)
     L.add(stat('HTTP 5xx (range)', loki(
-        'sum(count_over_time({job="odoo", db=~"$db"} | json | __error__="" | logger="werkzeug" | status=~"5.." [$__range]))',
+        'sum(count_over_time({job="odoo", db=~"$db"} | json | __error__="" | logger="odoo.http.server" | status=~"5.." [$__range]))',
         instant=True), 'short', [(1, 'red')]), 6, 4)
     L.add(stat('Requests > 500 SQL queries', loki(
-        'sum(count_over_time({job="odoo", db=~"$db"} | json | __error__="" | logger="werkzeug" | query_count > 500 [$__range]))',
+        'sum(count_over_time({job="odoo", db=~"$db"} | json | __error__="" | logger="odoo.http.server" | query_count > 500 [$__range]))',
         instant=True), 'short', [(1, 'orange')]), 6, 4)
 
     L.add(timeseries('Log volume by level', [loki(
@@ -266,7 +266,7 @@ def logs_dashboard():
     L.add(logs('Errors and warnings', loki(
         f'{{job="odoo", db=~"$db", level=~"ERROR|CRITICAL|WARNING"}} |~ "(?i)$search" {fmt}')), 24, 12)
     L.add(logs('Heavy requests (access log: > 100 SQL queries or > 2 s)', loki(
-        '{job="odoo", db=~"$db"} | json | __error__="" | logger="werkzeug" | query_count > 100 or query_time > 2 or remaining_time > 2 '
+        '{job="odoo", db=~"$db"} | json | __error__="" | logger="odoo.http.server" | query_count > 100 or query_time > 2 or remaining_time > 2 '
         '| line_format "{{.status}} {{.http_method}} {{.path}}  queries={{.query_count}} sql={{.query_time}}s '
         'python={{.remaining_time}}s"')), 24, 10)
     L.add(logs('All logs', loki(f'{base} {fmt}')), 24, 14)

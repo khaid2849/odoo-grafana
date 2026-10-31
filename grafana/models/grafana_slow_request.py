@@ -50,7 +50,7 @@ class GrafanaSlowRequest(models.Model):
 
     @api.autovacuum
     def _gc_slow_logs(self) -> None:
-        days = int(self.env['ir.config_parameter'].sudo().get_param(ICP_RETENTION_DAYS, 30) or 30)
+        days = self.env['ir.config_parameter'].sudo().get_int(ICP_RETENTION_DAYS, 30) or 30
         limit_date = fields.Datetime.now() - datetime.timedelta(days=days)
         # slow queries are removed by the ondelete='cascade' foreign key
         records = self.search([('request_date', '<', limit_date)])
