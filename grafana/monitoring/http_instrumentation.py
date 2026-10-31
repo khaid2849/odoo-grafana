@@ -5,10 +5,14 @@ The patches stay as thin as possible:
 * ``Application.__call__`` times the whole request, captures the status code
   and installs a SQL hook through ``threading.current_thread().query_hooks``,
   the extension point ``odoo.sql_db.Cursor.execute`` already provides (the
-  profiler uses the same one), so ``execute`` itself is left untouched.
+  profiler uses the same one), so ``execute`` itself is left untouched. The
+  hook runs before the query and returns a callback that receives its
+  duration once it is done.
 * ``Request._serve_ir_http`` records the matched route pattern (low
-  cardinality, unlike the raw path), the RPC model/method and the per-database
-  thresholds, read from ``ir.config_parameter`` while a cursor is still open.
+  cardinality, unlike the raw path), the RPC model/method of web client
+  (``/web/dataset/call_kw``) and JSON-2 (``/json/2``) calls and the
+  per-database thresholds, read from ``ir.config_parameter`` while a cursor
+  is still open.
 
 Slow requests and their slow queries are persisted after the response is
 built, on a fresh cursor, so they survive a rollback of the request
@@ -18,6 +22,7 @@ import logging
 import re
 import threading
 import time
+from collections.abc import Callable
 
 import psutil
 
@@ -32,6 +37,7 @@ _logger = logging.getLogger(__name__)
 # Long-lived or self-referential endpoints that would skew latency metrics.
 SKIPPED_PREFIXES = ('/websocket', '/longpolling', '/metrics')
 CALL_KW_PREFIX = '/web/dataset/call_kw'
+JSON2_ROUTE = '/json/2/<__model__>/<__method__>'
 METHOD_NAME_RE = re.compile(r'[A-Za-z_][A-Za-z0-9_]{0,63}')
 MAX_QUERY_LENGTH = 4000
 MAX_SLOW_QUERIES_PER_REQUEST = 50
@@ -69,12 +75,16 @@ class RequestStats:
         self.slow_request_threshold = _config_ms('grafana_slow_request_ms', 2000)
         self.slow_query_threshold = _config_ms('grafana_slow_query_ms', 500)
 
-    def query_hook(self, cr, query, params, start, delay) -> None:
-        if delay >= self.slow_query_threshold and len(self.slow_queries) < MAX_SLOW_QUERIES_PER_REQUEST:
-            # The parametrised text (placeholders, no values) is kept on
-            # purpose: it groups identical queries and never stores user data.
-            text = query.decode(errors='replace') if isinstance(query, bytes) else str(query)
-            self.slow_queries.append((text[:MAX_QUERY_LENGTH], delay))
+    def query_hook(self, cr, query, params, start, delay) -> Callable[[float], None]:
+        # Called before the query runs (``delay`` is a placeholder), the
+        # returned callback gets the real duration once the query is done.
+        def on_query_end(delay: float) -> None:
+            if delay >= self.slow_query_threshold and len(self.slow_queries) < MAX_SLOW_QUERIES_PER_REQUEST:
+                # The parametrised text (placeholders, no values) is kept on
+                # purpose: it groups identical queries and never stores user data.
+                text = query.decode(errors='replace') if isinstance(query, bytes) else str(query)
+                self.slow_queries.append((text[:MAX_QUERY_LENGTH], delay))
+        return on_query_end
 
     def load_thresholds(self, env) -> None:
         if 'grafana.slow.request' not in env.registry:
@@ -203,16 +213,19 @@ def _instrumented_serve_ir_http(original):
         try:
             return original(self, rule, args)
         finally:
+            model = method = None
             if rule.rule.startswith(CALL_KW_PREFIX):
                 params = getattr(self, 'params', None) or {}
                 model, method = params.get('model'), params.get('method')
-                # Only label real model methods: both values come from the
-                # client and must not create unbounded metric series.
-                if (isinstance(model, str) and isinstance(method, str)
-                        and model in self.registry
-                        and METHOD_NAME_RE.fullmatch(method)
-                        and callable(getattr(self.registry[model], method, None))):
-                    stats.model, stats.method = model, method
+            elif rule.rule == JSON2_ROUTE:
+                model, method = args.get('__model__'), args.get('__method__')
+            # Only label real model methods: both values come from the
+            # client and must not create unbounded metric series.
+            if (isinstance(model, str) and isinstance(method, str)
+                    and model in self.registry
+                    and METHOD_NAME_RE.fullmatch(method)
+                    and callable(getattr(self.registry[model], method, None))):
+                stats.model, stats.method = model, method
     return _serve_ir_http
 
 

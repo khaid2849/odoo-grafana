@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 16:33+0000\n"
-"PO-Revision-Date: 2026-10-30 16:33+0000\n"
+"POT-Creation-Date: 2026-10-31 02:06+0000\n"
+"PO-Revision-Date: 2026-10-31 02:06+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,6 +23,12 @@ msgstr ""
 #. module: grafana
 #: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__active
 msgid "Active"
+msgstr ""
+
+#. module: grafana
+#. odoo-javascript
+#: code:addons/grafana/static/src/grafana_embed/grafana_embed.xml:0
+msgid "Add dashboards in Grafana > Configuration > Dashboards."
 msgstr ""
 
 #. module: grafana
@@ -143,6 +149,8 @@ msgstr ""
 #: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__display_name
 #: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__display_name
 #: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__display_name
+#: model:ir.model.fields,field_description:grafana.field_ir_cron__display_name
+#: model:ir.model.fields,field_description:grafana.field_res_config_settings__display_name
 msgid "Display Name"
 msgstr ""
 
@@ -164,8 +172,8 @@ msgstr ""
 
 #. module: grafana
 #: model:ir.actions.client,name:grafana.grafana_embed_action
-#: model:ir.module.category,name:grafana.module_category_grafana
 #: model:ir.ui.menu,name:grafana.menu_grafana_root
+#: model:res.groups.privilege,name:grafana.res_groups_privilege_grafana
 #: model_terms:ir.ui.view,arch_db:grafana.grafana_dashboard_view_form
 #: model_terms:ir.ui.view,arch_db:grafana.res_config_settings_view_form
 msgid "Grafana"
@@ -208,13 +216,16 @@ msgstr ""
 
 #. module: grafana
 #: model:ir.model.fields,help:grafana.field_grafana_dashboard__kiosk
-msgid "Hide the Grafana navigation chrome in the embedded view."
+msgid ""
+"Hide the Grafana navigation chrome and branding footer in the embedded view."
 msgstr ""
 
 #. module: grafana
 #: model:ir.model.fields,field_description:grafana.field_grafana_dashboard__id
 #: model:ir.model.fields,field_description:grafana.field_grafana_slow_query__id
 #: model:ir.model.fields,field_description:grafana.field_grafana_slow_request__id
+#: model:ir.model.fields,field_description:grafana.field_ir_cron__id
+#: model:ir.model.fields,field_description:grafana.field_res_config_settings__id
 msgid "ID"
 msgstr ""
 
@@ -286,6 +297,12 @@ msgid "Name"
 msgstr ""
 
 #. module: grafana
+#. odoo-javascript
+#: code:addons/grafana/static/src/grafana_embed/grafana_embed.xml:0
+msgid "No dashboard configured"
+msgstr ""
+
+#. module: grafana
 #: model_terms:ir.actions.act_window,help:grafana.grafana_slow_query_action
 msgid "No slow query logged"
 msgstr ""
@@ -298,6 +315,12 @@ msgstr ""
 #. module: grafana
 #: model:grafana.dashboard,description:grafana.dashboard_logs
 msgid "Odoo server logs, errors and access log (Loki)."
+msgstr ""
+
+#. module: grafana
+#. odoo-javascript
+#: code:addons/grafana/static/src/grafana_embed/grafana_embed.xml:0
+msgid "Open in Grafana"
 msgstr ""
 
 #. module: grafana

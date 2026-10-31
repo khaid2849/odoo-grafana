@@ -1,4 +1,5 @@
 import datetime
+from unittest.mock import patch
 
 from prometheus_client import CollectorRegistry, multiprocess
 
@@ -66,7 +67,9 @@ class TestSlowLog(TransactionCase):
         })
         sample = ('odoo_cron_runs_total', {'db': self.env.cr.dbname, 'cron': cron.cron_name, 'status': 'success'})
         before = self._sample(*sample)
-        cron._callback(cron.cron_name, cron.ir_actions_server_id.id)
+        # _callback commits its own transaction, which the test cursor forbids
+        with patch.object(self.env.cr, 'commit'), patch.object(self.env.cr, 'rollback'):
+            cron._callback(cron.cron_name, cron.ir_actions_server_id.id)
         self.assertEqual(self._sample(*sample), before + 1)
 
     @staticmethod

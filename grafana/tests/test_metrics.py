@@ -1,5 +1,7 @@
+import datetime
 from unittest.mock import patch
 
+from odoo import fields
 from odoo.tests import HttpCase, tagged
 from odoo.tools import mute_logger
 
@@ -48,6 +50,20 @@ class TestMetricsEndpoint(HttpCase):
         )
         self.assertNotIn('zz_no_such_method', self.url_open('/metrics').text)
 
+    def test_json2_calls_are_labelled_by_model_and_method(self):
+        if not self.env['ir.module.module'].search_count([('name', '=', 'rpc'), ('state', '=', 'installed')]):
+            self.skipTest("/json/2 is provided by the rpc module")
+        key = self.env['res.users.apikeys'].with_user(self.env.ref('base.user_admin'))._generate(
+            scope='rpc', name='grafana test', expiration_date=fields.Datetime.now() + datetime.timedelta(days=1),
+        )
+        response = self.url_open('/json/2/res.partner/search', data='{"domain": []}', headers={
+            'Content-Type': 'application/json', 'Authorization': f'Bearer {key}',
+        })
+        self.assertEqual(response.status_code, 200)
+        body = self.url_open('/metrics').text
+        sample = f'odoo_rpc_calls_total{{db="{self.env.cr.dbname}",method="search",model="res.partner"}}'
+        self.assertIn(sample, body)
+
     def test_slow_request_is_logged(self):
         icp = self.env['ir.config_parameter'].sudo()
         icp.set_param('grafana.slow_log_enabled', 'True')
@@ -66,6 +82,19 @@ class TestMetricsEndpoint(HttpCase):
         self.assertTrue(log.slow_query_ids)
         self.assertNotIn("'", log.slow_query_ids[0].query.split('WHERE')[-1].replace("''", ''),
                          "queries are stored with placeholders, not literal values")
+
+    def test_fast_queries_are_not_logged(self):
+        icp = self.env['ir.config_parameter'].sudo()
+        icp.set_param('grafana.slow_log_enabled', 'True')
+        icp.set_param('grafana.slow_request_threshold_ms', '0')
+        icp.set_param('grafana.slow_query_threshold_ms', '60000')
+        self.authenticate('admin', 'admin')
+        self.make_jsonrpc_request('/web/dataset/call_kw/res.partner/search_count', {
+            'model': 'res.partner', 'method': 'search_count', 'args': [[]], 'kwargs': {},
+        })
+        log = self.env['grafana.slow.request'].search([('rpc_method', '=', 'search_count')], limit=1)
+        self.assertTrue(log, "the request should have been logged with a 0 ms threshold")
+        self.assertFalse(log.slow_query_ids, "queries below the slow-query threshold must not be logged")
 
     def test_slow_log_disabled(self):
         icp = self.env['ir.config_parameter'].sudo()

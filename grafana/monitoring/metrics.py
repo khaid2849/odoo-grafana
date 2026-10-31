@@ -67,12 +67,12 @@ SQL_SLOW_QUERIES = Counter(
 )
 RPC_CALLS = Counter(
     'odoo_rpc_calls_total',
-    'ORM calls made through /web/dataset/call_kw, by model and method.',
+    'ORM calls made through /web/dataset/call_kw and /json/2, by model and method.',
     ['db', 'model', 'method'],
 )
 RPC_SECONDS = Counter(
     'odoo_rpc_duration_seconds_total',
-    'Time spent in ORM calls made through /web/dataset/call_kw.',
+    'Time spent in ORM calls made through /web/dataset/call_kw and /json/2.',
     ['db', 'model', 'method'],
 )
 CRON_RUNS = Counter(

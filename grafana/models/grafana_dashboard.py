@@ -19,9 +19,7 @@ class GrafanaDashboard(models.Model):
     time_from = fields.Char(string='Default Time Range', default='now-6h', required=True)
     refresh = fields.Char(string='Auto Refresh', default='30s', help="Grafana refresh interval, e.g. 30s, 1m. Empty disables it.")
 
-    _sql_constraints = [
-        ('uid_unique', 'unique(uid)', "A dashboard with this UID already exists."),
-    ]
+    _uid_unique = models.Constraint('unique(uid)', "A dashboard with this UID already exists.")
 
     def _get_embed_url(self, base_url: str) -> str:
         self.ensure_one()

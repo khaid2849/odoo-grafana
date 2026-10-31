@@ -2,12 +2,13 @@
 
 ![Grafana for Odoo](grafana/static/description/banner.png)
 
-Odoo 18 module that plugs Odoo into the Grafana stack (Prometheus, Loki,
+Odoo 19 module that plugs Odoo into the Grafana stack (Prometheus, Loki,
 Grafana) to monitor performance, track logs and visualise data.
 
 * **`/metrics` Prometheus endpoint**, aggregated across prefork workers: HTTP
   latency per route, SQL queries and SQL time per request, ORM calls per
-  model/method, cron runs and duration, worker memory, warning/error rate.
+  model/method (web client and JSON-2 API), cron runs and duration, worker
+  memory, warning/error rate.
 * **Slow request and slow SQL query log**, browsable in Odoo (list, graph,
   pivot) and queried by Grafana from PostgreSQL.
 * **JSON logs**, one object per line with database, user, query count and
@@ -31,7 +32,7 @@ Grafana) to monitor performance, track logs and visualise data.
 | [`grafana/`](grafana) | the Odoo module (technical name `grafana`) |
 | [`grafana/deploy/`](grafana/deploy) | Docker Compose monitoring stack, dashboards, nginx snippet |
 
-Branches follow Odoo versions: `18.0`.
+Branches follow Odoo versions: `18.0`, `19.0`, `20.0`.
 
 ## Quick start
 
@@ -70,6 +71,10 @@ slow query thresholds, log retention). Access is granted through the
 | `grafana_slow_request_ms` | | default slow request threshold (ms) |
 | `grafana_slow_query_ms` | | default slow query threshold (ms) |
 | | `PROMETHEUS_MULTIPROC_DIR` | shared metrics directory for prefork workers |
+
+Odoo does not know the `grafana_*` options and logs an *unknown option*
+warning for each of them at startup; they are read anyway. Use the
+environment variables to avoid the warnings.
 
 ## Tests
 

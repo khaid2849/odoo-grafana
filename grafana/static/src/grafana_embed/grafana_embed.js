@@ -1,5 +1,3 @@
-/** @odoo-module **/
-
 import { Component, onWillStart, useState } from "@odoo/owl";
 import { cookie } from "@web/core/browser/cookie";
 import { registry } from "@web/core/registry";
